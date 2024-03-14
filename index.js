@@ -37,6 +37,7 @@ async function run() {
 
     const productCollection = client.db("productDB").collection("products");
     const brandCollection = client.db("productDB").collection("brand");
+    const courseCollection = client.db("productDB").collection("courses");
 
     // user collection
     const usercollection = client.db("productDB").collection("user");
@@ -48,10 +49,23 @@ async function run() {
       const result = await productCollection.insertOne(product);
       res.send(result);
     });
+    // adding courses for job task
+    app.post("/courses", async (req, res) => {
+      const course = req.body;
+      // console.log('get product',product)
+      const result = await courseCollection.insertOne(course);
+      res.send(result);
+    });
 
     //getting products
     app.get("/products", async (req, res) => {
       const cursor = productCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // get added courses
+    app.get("/courses", async (req, res) => {
+      const cursor = courseCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
