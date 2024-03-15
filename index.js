@@ -42,13 +42,7 @@ async function run() {
     // user collection
     const usercollection = client.db("productDB").collection("user");
 
-    //ADDING PRODUCTS
-    app.post("/products", async (req, res) => {
-      const product = req.body;
-      // console.log('get product',product)
-      const result = await productCollection.insertOne(product);
-      res.send(result);
-    });
+
     // adding courses for job task
     app.post("/courses", async (req, res) => {
       const course = req.body;
@@ -88,10 +82,10 @@ async function run() {
     });
 
     // get singel product by id
-    app.get("/productsbyid/:id", async (req, res) => {
+    app.get("/courses/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await productCollection.findOne(query);
+      const result = await courseCollection.findOne(query);
       res.send(result);
     });
 
