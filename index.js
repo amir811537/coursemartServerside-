@@ -126,8 +126,13 @@ async function run() {
       const result = await usercollection.insertOne(user);
       res.send(result);
     });
+    app.get("/user", async (req, res) => {
+      const cursor = usercollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 //  user get with email and products
-    app.get("/userProduct/:email", async (req, res) => {
+    app.get("/user/:email", async (req, res) => {
       const email=req.params.email;
       const query = { email: email };
       const cursor = usercollection.find(query);
