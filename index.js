@@ -38,10 +38,10 @@ async function run() {
     const productCollection = client.db("productDB").collection("products");
     const brandCollection = client.db("productDB").collection("brand");
     const courseCollection = client.db("productDB").collection("courses");
+    const profileCollection = client.db("productDB").collection("profileInfo");
 
     // user collection
     const usercollection = client.db("productDB").collection("user");
-
 
     // adding courses for job task
     app.post("/courses", async (req, res) => {
@@ -131,25 +131,43 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-//  user get with email and products
+    //  user get with email and products
     app.get("/user/:email", async (req, res) => {
-      const email=req.params.email;
+      const email = req.params.email;
       const query = { email: email };
       const cursor = usercollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
 
-
-//  user delete 
-app.delete('/user/:id',async(req,res)=>{
-  const id=req.params.id;
-  const query={_id: new ObjectId(id)}
-  const result= await usercollection.deleteOne(query);
-  res.send(result);
-})
-
-
+    //user profile related api post
+    app.post("/profileInfo", async (req, res) => {
+      const profileInfo = req.body;
+      const result = await profileCollection.insertOne(profileInfo);
+      res.send(result);
+    });
+    // get profile info using email
+    app.get("/profileInfo/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const cursor = profileCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // get profileinfo by id
+    app.get("/profileInfo/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await profileCollection.findOne(query);
+      res.send(result);
+    });
+    //  user delete
+    app.delete("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await usercollection.deleteOne(query);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
