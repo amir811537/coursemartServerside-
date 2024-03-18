@@ -146,6 +146,15 @@ async function run() {
       const result = await profileCollection.insertOne(profileInfo);
       res.send(result);
     });
+
+
+     //getting all profile info
+     app.get("/profileInfo", async (req, res) => {
+      const cursor = profileCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     // get profile info using email
     app.get("/profileInfo/:email", async (req, res) => {
       const email = req.params.email;
@@ -161,6 +170,26 @@ async function run() {
       const result = await profileCollection.findOne(query);
       res.send(result);
     });
+
+
+// PATCH route for updating user profile information
+app.patch("/profileInfo/:id", async (req, res) => {
+  const { id } = req.params;
+  const profileInfoUpdates = req.body;
+
+  try {
+    const result = await profileCollection.updateOne(
+      { _id: new ObjectId(id) }, 
+      { $set: profileInfoUpdates }
+    );
+
+    res.send(result);
+  } catch (error) {
+    console.error("Error updating profile information:", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
     //  user delete
     app.delete("/user/:id", async (req, res) => {
       const id = req.params.id;
