@@ -154,6 +154,44 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    // delete profile 
+    app.delete('/profileInfo/:id',async(req,res)=>{
+      const id =req.params.id;
+      const query={_id: new ObjectId(id)}
+      const result =await profileCollection.deleteOne(query);
+      res.send(result)
+    })
+
+
+    // make admin apis 
+    app.patch('/profileInfo/admin/:id',async(req,res)=>{
+      const id =req.params.id;
+      const query ={ _id: new ObjectId(id)};
+      const updatedDocs={
+        $set:{
+          role: "admin"
+        }
+      }
+      const result =await profileCollection.updateOne(query,updatedDocs)
+      res.send(result)
+    })
+
+// check by email isAdmin 
+app.get('/profileInfo/admin/:email',async(req,res)=>{
+  const clientEmail=req.params.email;
+  // console.log(email)
+const query ={email: clientEmail};
+const profile =await profileCollection.findOne(query)
+let admin ;
+if(profile){
+  admin = profile.role === 'admin';
+
+}
+console.log(admin)
+res.send({admin})
+
+})
+
 
     // get profile info using email
     app.get("/profileInfo/:email", async (req, res) => {
