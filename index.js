@@ -88,24 +88,23 @@ async function run() {
       const result = await courseCollection.findOne(query);
       res.send(result);
     });
-
     // updated a products
-    app.put("/products/:id", async (req, res) => {
+    app.put("/courses/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
       const updatedProduct = req.body;
       const product = {
         $set: {
-          photourl: updatedProduct.photourl,
-          brandname: updatedProduct.brandname,
+          imgage: updatedProduct.imgage,
+          category: updatedProduct.category,
           name: updatedProduct.name,
           price: updatedProduct.price,
           rating: updatedProduct.rating,
           type: updatedProduct.type,
         },
       };
-      const result = await productCollection.updateOne(
+      const result = await courseCollection.updateOne(
         filter,
         product,
         options
@@ -118,6 +117,12 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await productCollection.deleteOne(query);
+      res.send(result);
+    });
+    app.delete("/courses/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await courseCollection.deleteOne(query);
       res.send(result);
     });
     //user related api post
